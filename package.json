@@ -16,5 +16,8 @@
 	"bugs": {
 		"url": "https://github.com/leokodish/PostureCheck/issues"
 	},
-	"homepage": "https://github.com/leokodish/PostureCheck#readme"
+	"homepage": "https://github.com/leokodish/PostureCheck#readme",
+	"devDependencies": {
+		"typescript": "^4.5.5"
+	}
 }
