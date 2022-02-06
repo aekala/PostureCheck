@@ -1,4 +1,4 @@
-let changeColor = document.getElementById("changeColor");
+let changeColor: HTMLElement = document.getElementById("changeColor");
 
 chrome.storage.sync.get("color", ({ color }) => {
 	changeColor.style.backgroundColor = color;
@@ -9,11 +9,11 @@ changeColor.addEventListener("click", async () => {
 
 	chrome.scripting.executeScript({
 		target: { tabId: tab.id },
-		function: setPageBackgroundColor,
+		func: setPageBackgroundColor,
 	});
 });
 
-function setPageBackgroundColor() {
+function setPageBackgroundColor(): void {
 	chrome.storage.sync.get("color", ({ color }) => {
 		document.body.style.backgroundColor = color;
 	});

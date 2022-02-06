@@ -49,7 +49,7 @@ changeColor.addEventListener("click", function () { return __awaiter(_this, void
                 tab = (_a.sent())[0];
                 chrome.scripting.executeScript({
                     target: { tabId: tab.id },
-                    function: setPageBackgroundColor,
+                    func: setPageBackgroundColor,
                 });
                 return [2 /*return*/];
         }
