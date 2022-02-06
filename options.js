@@ -3,6 +3,9 @@ let selectedClassName = "current";
 const presetButtonColors = ["#3aa757", "#e8453c", "#f9bb2d", "#4688f1"];
 
 function handleButtonClick(event) {
+	chrome.storage.sync.get((color) => {
+		console.log(color);
+	});
 	let currentSelection = event.target.parentElement.querySelector(
 		`.${selectedClassName}`
 	);
@@ -13,9 +16,7 @@ function handleButtonClick(event) {
 	if (currentSelection && newSelection && currentSelection !== newSelection) {
 		currentSelection.classList.remove(selectedClassName);
 		newSelection.classList.add(selectedClassName);
-		console.log(newColor);
-		console.log(typeof newColor);
-		chrome.storage.sync.set({ newColor });
+		chrome.storage.sync.set({ color: newColor });
 	}
 }
 
