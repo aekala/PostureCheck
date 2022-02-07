@@ -1,7 +1,6 @@
-const { loadavg } = require("os");
 const path = require("path");
-const { LoaderOptionsPlugin } = require("webpack");
 const srcDir = path.join(__dirname, "..", "src");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	entry: {
@@ -17,12 +16,19 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
+				include: path.resolve(__dirname, "../src/"),
 				use: "ts-loader",
 				exclude: /node_modules/,
 			},
 			{
 				test: /\.css$/i,
+				include: path.resolve(__dirname, "../styles"),
 				use: ["style-loader", "css-loader"],
+			},
+			{
+				test: /\.(png|svg|jpg|jpeg|gif)$/i,
+				include: path.resolve(__dirname, "../images"),
+				type: "asset/resource",
 			},
 		],
 	},
