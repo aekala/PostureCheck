@@ -21,6 +21,7 @@
 	"homepage": "https://github.com/leokodish/PostureCheck#readme",
 	"devDependencies": {
 		"@types/chrome": "0.0.178",
+		"copy-webpack-plugin": "^10.2.4",
 		"css-loader": "^6.6.0",
 		"style-loader": "^3.3.1",
 		"ts-loader": "^9.2.6",

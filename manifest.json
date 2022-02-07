@@ -19,7 +19,7 @@
 		"128": "/images/get_started128.png"
 	},
 	"background": {
-		"service_worker": "/dist/js/background.js"
+		"service_worker": "/js/background.js"
 	},
 	"permissions": ["storage", "activeTab", "scripting"],
 	"options_page": "/public/options.html"
