@@ -1,5 +1,7 @@
+const { loadavg } = require("os");
 const path = require("path");
-const srcDir = path.join(__dirname, "src");
+const { LoaderOptionsPlugin } = require("webpack");
+const srcDir = path.join(__dirname, "..", "src");
 
 module.exports = {
 	entry: {
@@ -8,7 +10,7 @@ module.exports = {
 		background: path.join(srcDir, "background.ts"),
 	},
 	output: {
-		path: path.join(__dirname, "./dist/js"),
+		path: path.join(__dirname, "../dist/js"),
 		filename: "[name].js",
 	},
 	module: {
@@ -17,6 +19,10 @@ module.exports = {
 				test: /\.tsx?$/,
 				use: "ts-loader",
 				exclude: /node_modules/,
+			},
+			{
+				test: /\.css$/i,
+				use: ["style-loader", "css-loader"],
 			},
 		],
 	},
