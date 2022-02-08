@@ -16,12 +16,25 @@ function Options() {
 		"#4688f1",
 	];
 
+	function handleButtonClick(event) {
+		const newColor = event.target.dataset.color;
+		chrome.storage.sync.set({ color: newColor }, () => {
+			setColor(newColor);
+		});
+	}
+
 	return (
 		<>
 			<p>Choose a different background color!</p>
 			{presetButtonColors.map((buttonColor) => {
 				const isSelected = buttonColor == color;
-				return <Button color={buttonColor} isSelected={isSelected} />;
+				return (
+					<Button
+						color={buttonColor}
+						isSelected={isSelected}
+						handleClick={handleButtonClick}
+					/>
+				);
 			})}
 		</>
 	);
