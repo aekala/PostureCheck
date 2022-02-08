@@ -10,10 +10,15 @@ module.exports = {
 		options: path.join(srcDir, "options.ts"),
 		background: path.join(srcDir, "background.ts"),
 		content_script: path.join(srcDir, "content_script.tsx"),
+		test: path.join(srcDir, "test.tsx"),
+		button: path.join(srcDir, "button.tsx"),
 	},
 	output: {
 		path: path.join(__dirname, "../dist/js"),
 		filename: "[name].js",
+	},
+	resolve: {
+		extensions: [".js", ".jsx", ".ts", ".tsx"],
 	},
 	module: {
 		rules: [

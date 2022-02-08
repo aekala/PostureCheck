@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-function Test() {
+function Popup() {
 	let [color, setColor] = useState("");
 
 	chrome.storage.sync.get("color", ({ color }) => {
@@ -39,7 +39,7 @@ function Test() {
 
 ReactDOM.render(
 	<React.StrictMode>
-		<Test />
+		<Popup />
 	</React.StrictMode>,
 	document.getElementById("root")
 );
