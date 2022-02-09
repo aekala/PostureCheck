@@ -1,38 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 function Popup() {
-	let [color, setColor] = useState("");
-
-	chrome.storage.sync.get("color", ({ color }) => {
-		setColor(color);
+	const [notificationText, setNotificationText] = useState("");
+	getStoredNotificationText().then((text) => {
+		setNotificationText(text);
 	});
 
-	async function handleClick() {
-		let [tab] = await chrome.tabs.query({
-			active: true,
-			currentWindow: true,
-		});
-
-		if (tab.id) {
-			chrome.tabs.sendMessage(
-				tab.id,
-				{
-					color,
-				},
-				(msg) => {
-					console.log("result message:", msg);
+	function getStoredNotificationText(): Promise<string> {
+		return new Promise((resolve, reject) => {
+			chrome.storage.sync.get("notificationText", ({ notificationText }) => {
+				if (chrome.runtime.lastError) {
+					return reject(chrome.runtime.lastError);
 				}
-			);
-		}
+				resolve(notificationText);
+			});
+		});
+	}
+
+	function updateNotificationText(e) {
+		const text = e.target.value;
+		chrome.storage.sync.set({ notificationText: text });
+		setNotificationText(text);
+	}
+
+	function handleSubmit() {
+		chrome.runtime.sendMessage({
+			request: "updateAlarm",
+			alarmMessage: notificationText,
+			alarmPeriodInMinutes: 0.05,
+		});
 	}
 
 	return (
 		<>
-			<button
-				style={{ backgroundColor: color ? color : "gray" }}
-				onClick={handleClick}
-			></button>
+			<form onSubmit={handleSubmit}>
+				<label>
+					Notification Message:
+					<input
+						type='text'
+						value={notificationText}
+						onChange={updateNotificationText}
+					/>
+				</label>
+				<input type='submit' value='Submit' />
+			</form>
 		</>
 	);
 }

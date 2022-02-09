@@ -27,7 +27,7 @@
 			"js": ["/js/content_script.js"]
 		}
 	],
-	"permissions": ["storage", "activeTab", "scripting"],
+	"permissions": ["storage", "notifications", "alarms"],
 	"host_permissions": ["<all_urls>"],
 	"options_page": "/public/options.html"
 }
