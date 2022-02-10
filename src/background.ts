@@ -1,8 +1,11 @@
-let notificationMessage;
+import { NotificationData } from "./notificationData";
+
+let notificationData: NotificationData;
 
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.storage.sync.clear();
-	chrome.storage.sync.set({ notificationText: "Posture Check!" });
+	const initialNotificationData: NotificationData = new NotificationData();
+	chrome.storage.sync.set({ notificationData: initialNotificationData });
 });
 
 function eventListener(message, callback, sendResponse) {
@@ -17,10 +20,10 @@ function eventListener(message, callback, sendResponse) {
 			});
 			break;
 		case "updateAlarm":
-			notificationMessage = message.alarmMessage;
+			notificationData = message.notificationData;
 			chrome.alarms.clearAll();
 			chrome.alarms.onAlarm.removeListener(alarmListener);
-			chrome.alarms.create(message.alarmMessage, {
+			chrome.alarms.create(notificationData.message, {
 				periodInMinutes: message.alarmPeriodInMinutes,
 			});
 			chrome.alarms.onAlarm.addListener(alarmListener);
@@ -33,14 +36,14 @@ chrome.runtime.onMessage.addListener(eventListener);
 
 function alarmListener(alarmInfo) {
 	console.log(alarmInfo.name);
-	console.log("alarm: " + notificationMessage);
+	console.log("alarm: " + notificationData.message);
 	chrome.notifications.clear("PostureAlarm", (wasCleared) => {
 		console.log("Was Cleared?: " + wasCleared);
 	});
 	chrome.notifications.create("PostureAlarm", {
-		type: "basic",
-		iconUrl: "../images/get_started16.png",
-		title: "PostureCheck",
-		message: notificationMessage,
+		iconUrl: notificationData.iconUrl,
+		title: notificationData.title,
+		message: notificationData.message,
+		type: notificationData.type,
 	});
 }
