@@ -23,8 +23,8 @@ function eventListener(message, callback, sendResponse) {
 			notificationData = message.notificationData;
 			chrome.alarms.clearAll();
 			chrome.alarms.onAlarm.removeListener(alarmListener);
-			chrome.alarms.create(notificationData.message, {
-				periodInMinutes: message.alarmPeriodInMinutes,
+			chrome.alarms.create(notificationData.title, {
+				periodInMinutes: notificationData.interval,
 			});
 			chrome.alarms.onAlarm.addListener(alarmListener);
 			break;
