@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 function Popup() {
 	const [notificationText, setNotificationText] = useState("");
+	// const [notificationData, setNotificationData] = useState({});
 	getStoredNotificationText().then((text) => {
 		setNotificationText(text);
 	});
@@ -28,7 +29,7 @@ function Popup() {
 		chrome.runtime.sendMessage({
 			request: "updateAlarm",
 			alarmMessage: notificationText,
-			alarmPeriodInMinutes: 0.05,
+			alarmPeriodInMinutes: 0.1,
 		});
 	}
 
