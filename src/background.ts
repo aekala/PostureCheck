@@ -21,6 +21,7 @@ function eventListener(message, callback, sendResponse) {
 			break;
 		case "updateAlarm":
 			notificationData = message.notificationData;
+			console.log(notificationData);
 			chrome.alarms.clearAll();
 			chrome.alarms.onAlarm.removeListener(alarmListener);
 			chrome.alarms.create(notificationData.title, {

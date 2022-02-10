@@ -1,41 +1,102 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import Button from "./button";
+import { NotificationData } from "./notificationData";
 
 function Options() {
-	let [color, setColor] = useState("");
+	const [notificationData, setNotificationData] = useState(
+		new NotificationData()
+	);
 
-	chrome.storage.sync.get("color", ({ color }) => {
-		setColor(color);
+	getStoredNotificationData().then((data) => {
+		setNotificationData(data);
 	});
 
-	const presetButtonColors: string[] = [
-		"#3aa757",
-		"#e8453c",
-		"#f9bb2d",
-		"#4688f1",
-	];
+	function getStoredNotificationData(): Promise<NotificationData> {
+		return new Promise((resolve, reject) => {
+			chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+				if (chrome.runtime.lastError) {
+					return reject(chrome.runtime.lastError);
+				}
+				resolve(notificationData);
+			});
+		});
+	}
 
-	function handleButtonClick(event) {
-		const newColor = event.target.dataset.color;
-		chrome.storage.sync.set({ color: newColor }, () => {
-			setColor(newColor);
+	function updateNotificationTitle(e) {
+		const title: string = e.target.value;
+		if (title.length > 0) {
+			chrome.storage.sync.set({
+				notificationData: { ...notificationData, title: title },
+			});
+
+			setNotificationData(
+				new NotificationData({ ...notificationData, title: title })
+			);
+		}
+	}
+
+	function updateNotificationMessage(e) {
+		const message: string = e.target.value;
+		if (message.length > 0) {
+			chrome.storage.sync.set({
+				notificationData: { ...notificationData, message: message },
+			});
+
+			setNotificationData(
+				new NotificationData({ ...notificationData, message: message })
+			);
+		}
+	}
+
+	function updateNotificationInterval(e) {
+		const interval: number = parseInt(e.target.value);
+		if (interval > 0) {
+			chrome.storage.sync.set({
+				notificationData: { ...notificationData, interval: interval },
+			});
+
+			setNotificationData(
+				new NotificationData({ ...notificationData, interval: interval })
+			);
+		}
+	}
+
+	function handleSubmit() {
+		chrome.runtime.sendMessage({
+			request: "updateAlarm",
+			notificationData,
 		});
 	}
 
 	return (
 		<>
-			<p>Choose a different background color!</p>
-			{presetButtonColors.map((buttonColor) => {
-				const isSelected = buttonColor == color;
-				return (
-					<Button
-						color={buttonColor}
-						isSelected={isSelected}
-						handleClick={handleButtonClick}
-					/>
-				);
-			})}
+			<form onSubmit={handleSubmit}>
+				<label htmlFor='title'>Title</label>
+				<input
+					type='text'
+					id='title'
+					name='title'
+					value={notificationData.title}
+					onChange={updateNotificationTitle}
+				/>
+				<label htmlFor='message'>Message</label>
+				<input
+					type='text'
+					id='message'
+					name='message'
+					value={notificationData.message}
+					onChange={updateNotificationMessage}
+				/>
+				<label htmlFor='interval'>Time Between Alerts (in minutes)</label>
+				<input
+					type='number'
+					id='interval'
+					name='interval'
+					value={notificationData.interval}
+					onChange={updateNotificationInterval}
+				/>
+				<input type='submit' value='Submit' />
+			</form>
 		</>
 	);
 }
