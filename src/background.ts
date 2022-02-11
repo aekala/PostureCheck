@@ -23,13 +23,19 @@ function eventListener(message, callback, sendResponse) {
 			break;
 		case "updateAlarm":
 			notificationData = message.notificationData;
-			chrome.alarms.clearAll();
+			console.log(notificationData);
+			chrome.alarms.clearAll((wasCleared) => {
+				if (!wasCleared) {
+					console.error("Failed to clear all existing alarms");
+				}
+			});
 			chrome.alarms.onAlarm.removeListener(alarmListener);
 			if (chrome.alarms.onAlarm.hasListeners()) {
-				console.error("Alarm still has listeners attached");
+				console.error("Alarm still has active event listeners attached");
 			}
 			chrome.alarms.create("PostureCheck", {
-				periodInMinutes: notificationData.interval,
+				// periodInMinutes: notificationData.interval,
+				periodInMinutes: 0.05,
 			});
 			chrome.alarms.onAlarm.addListener(alarmListener);
 			if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
@@ -42,16 +48,25 @@ function eventListener(message, callback, sendResponse) {
 
 chrome.runtime.onMessage.addListener(eventListener);
 
-function alarmListener(alarmInfo) {
-	console.log(alarmInfo.name);
-	console.log("alarm: " + notificationData.message);
+function alarmListener() {
+	console.log(notificationData);
+	notificationData.timesFired++; //TODO: FIGURE OUT BUG WITH UPDATING TIMES FIRED
+	chrome.storage.sync.set({
+		notificationData: {
+			...notificationData,
+			timesFired: notificationData.timesFired,
+		},
+	});
 	chrome.notifications.clear("PostureAlarm", (wasCleared) => {
-		console.log("Was Cleared?: " + wasCleared);
+		if (notificationData.timesFired > 0 && !wasCleared) {
+			console.error("Failed to clear all existing notifications");
+		}
 	});
 	chrome.notifications.create("PostureAlarm", {
 		iconUrl: notificationData.iconUrl,
 		title: notificationData.title,
 		message: notificationData.message,
 		type: notificationData.type,
+		silent: notificationData.silent,
 	});
 }
