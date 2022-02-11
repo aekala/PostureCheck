@@ -2,41 +2,41 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 function Popup() {
-	const [secondsUntilAlarm, setSecondsUntilAlarm] = useState(0);
+	const [isAlarmRunning, setIsAlarmRunning] = useState(true);
+	const [secondsUntilAlarm, setSecondsUntilAlarm] = useState(null);
 
-	setTimeUntilNextAlarm();
-
-	function setTimeUntilNextAlarm() {
-		getNotificationAlarm().then((alarm) => {
-			if (alarm) {
-				let timeUntilAlarm = Math.floor(
-					(alarm.scheduledTime - Date.now()) / 1000
-				);
-				if (timeUntilAlarm <= 0) {
-					timeUntilAlarm = 0;
+	function getTimeUntilNextNotification(): Promise<number> {
+		return new Promise((resolve, reject) => {
+			chrome.alarms.get("PostureCheck", (alarm) => {
+				if (chrome.runtime.lastError) {
+					reject(chrome.runtime.lastError);
 				}
-				setSecondsUntilAlarm(timeUntilAlarm);
-			}
+				let timeUntilAlarm = null;
+				if (alarm != null) {
+					setIsAlarmRunning(true);
+					timeUntilAlarm = Math.ceil((alarm.scheduledTime - Date.now()) / 1000);
+					if (timeUntilAlarm < 0) {
+						timeUntilAlarm = 0;
+					}
+				} else {
+					setIsAlarmRunning(false);
+				}
+				resolve(timeUntilAlarm);
+			});
 		});
 	}
 
 	useEffect(() => {
 		let timer = setInterval(() => {
-			setTimeUntilNextAlarm();
-		}, 1000);
-	}, []);
-
-	function getNotificationAlarm(): Promise<chrome.alarms.Alarm> {
-		return new Promise((resolve, reject) => {
-			chrome.alarms.get("PostureCheck", (alarm) => {
-				console.log(alarm);
-				if (chrome.runtime.lastError) {
-					return reject(chrome.runtime.lastError);
-				}
-				resolve(alarm);
+			getTimeUntilNextNotification().then((time) => {
+				setSecondsUntilAlarm(time);
 			});
-		});
-	}
+		}, 100);
+
+		return () => {
+			clearInterval(timer);
+		};
+	}, []);
 
 	function getTimeDisplay(): string {
 		const ISOTimeUntilAlarm = new Date(secondsUntilAlarm * 1000).toISOString();
@@ -49,10 +49,19 @@ function Popup() {
 		}
 	}
 
+	let timeDisplay = "Loading...";
+	if (isAlarmRunning) {
+		if (secondsUntilAlarm != null) {
+			timeDisplay = getTimeDisplay();
+		}
+	} else {
+		timeDisplay = "No Alarm Currently Set";
+	}
+
 	return (
 		<>
 			<p>POPUP TBD</p>
-			<p>{getTimeDisplay()}</p>
+			<p>{timeDisplay}</p>
 		</>
 	);
 }

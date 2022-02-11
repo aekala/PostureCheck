@@ -25,10 +25,16 @@ function eventListener(message, callback, sendResponse) {
 			notificationData = message.notificationData;
 			chrome.alarms.clearAll();
 			chrome.alarms.onAlarm.removeListener(alarmListener);
-			chrome.alarms.create(notificationData.title, {
+			if (chrome.alarms.onAlarm.hasListeners()) {
+				console.error("Alarm still has listeners attached");
+			}
+			chrome.alarms.create("PostureCheck", {
 				periodInMinutes: notificationData.interval,
 			});
 			chrome.alarms.onAlarm.addListener(alarmListener);
+			if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
+				console.error("Failed to attach event listener alarmListener");
+			}
 			break;
 	}
 	sendResponse();
