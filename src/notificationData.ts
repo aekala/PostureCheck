@@ -10,7 +10,7 @@ export class NotificationData {
 		message = "Posture Check!",
 		type = "basic",
 		iconUrl = "../images/get_started16.png",
-		interval = 0.1,
+		interval = 1,
 	} = {}) {
 		this.title = title;
 		this.message = message;

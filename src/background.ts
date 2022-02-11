@@ -4,6 +4,8 @@ let notificationData: NotificationData;
 
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.storage.sync.clear();
+	chrome.alarms.clearAll();
+	chrome.notifications.clear("PostureAlarm");
 	const initialNotificationData: NotificationData = new NotificationData();
 	chrome.storage.sync.set({ notificationData: initialNotificationData });
 });
@@ -21,7 +23,6 @@ function eventListener(message, callback, sendResponse) {
 			break;
 		case "updateAlarm":
 			notificationData = message.notificationData;
-			console.log(notificationData);
 			chrome.alarms.clearAll();
 			chrome.alarms.onAlarm.removeListener(alarmListener);
 			chrome.alarms.create(notificationData.title, {

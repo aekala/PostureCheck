@@ -61,7 +61,8 @@ function Options() {
 		}
 	}
 
-	function handleSubmit() {
+	function handleSubmit(e) {
+		e.preventDefault();
 		chrome.runtime.sendMessage({
 			request: "updateAlarm",
 			notificationData,
