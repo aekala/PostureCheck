@@ -6,10 +6,13 @@ function Options() {
 	const [notificationData, setNotificationData] = useState(
 		new NotificationData()
 	);
+	console.log(notificationData);
 
-	getStoredNotificationData().then((data) => {
-		setNotificationData(data);
-	});
+	useEffect(() => {
+		getStoredNotificationData().then((data) => {
+			setNotificationData(data);
+		});
+	}, []);
 
 	function getStoredNotificationData(): Promise<NotificationData> {
 		return new Promise((resolve, reject) => {
@@ -61,6 +64,20 @@ function Options() {
 		}
 	}
 
+	// function updateNotificationSilent(e) {
+	// 	const checked = e.target.checked;
+	// 	console.log(checked);
+	// 	if (checked != null) {
+	// 		chrome.storage.sync.set({
+	// 			notificationData: { ...notificationData, silent: checked },
+	// 		});
+
+	// 		setNotificationData(
+	// 			new NotificationData({ ...notificationData, silent: checked })
+	// 		);
+	// 	}
+	// }
+
 	function handleSubmit(e) {
 		e.preventDefault();
 		chrome.runtime.sendMessage({
@@ -96,6 +113,14 @@ function Options() {
 					value={notificationData.interval}
 					onChange={updateNotificationInterval}
 				/>
+				{/* <label htmlFor='silent'>Silent Notifications</label> */}
+				{/* <input
+					type='checkbox'
+					id='silent'
+					name='interval'
+					checked={notificationData.silent}
+					onChange={updateNotificationSilent}
+				/> */}
 				<input type='submit' value='Submit' />
 			</form>
 		</>
