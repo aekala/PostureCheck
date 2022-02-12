@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { NotificationData } from "./notificationData";
 
 function Popup() {
+	const [notificationData, setNotificationData] = useState(null);
 	const [isAlarmRunning, setIsAlarmRunning] = useState(true);
 	const [secondsUntilAlarm, setSecondsUntilAlarm] = useState(null);
 
@@ -38,6 +40,23 @@ function Popup() {
 		};
 	}, []);
 
+	useEffect(() => {
+		getStoredNotificationData().then((data) => {
+			setNotificationData(data);
+		});
+	}, [notificationData]);
+
+	function getStoredNotificationData(): Promise<NotificationData> {
+		return new Promise((resolve, reject) => {
+			chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+				if (chrome.runtime.lastError) {
+					return reject(chrome.runtime.lastError);
+				}
+				resolve(notificationData);
+			});
+		});
+	}
+
 	function getTimeDisplay(): string {
 		const ISOTimeUntilAlarm = new Date(secondsUntilAlarm * 1000).toISOString();
 		if (secondsUntilAlarm >= 3600) {
@@ -49,7 +68,7 @@ function Popup() {
 		}
 	}
 
-	let timeDisplay = "Loading...";
+	let timeDisplay = "Loading Time...";
 	if (isAlarmRunning) {
 		if (secondsUntilAlarm != null) {
 			timeDisplay = getTimeDisplay();
@@ -58,9 +77,15 @@ function Popup() {
 		timeDisplay = "No Alarm Currently Set";
 	}
 
+	let timesFiredDisplay = "Loading Times Fired...";
+	if (notificationData != null) {
+		timesFiredDisplay = `Times Fired: ${notificationData.timesFired}`;
+	}
+
 	return (
 		<>
 			<p>POPUP TBD</p>
+			<p>{timesFiredDisplay}</p>
 			<p>{timeDisplay}</p>
 		</>
 	);

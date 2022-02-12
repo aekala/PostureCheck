@@ -11,7 +11,7 @@ export class NotificationData {
 		title = "PostureCheck",
 		message = "Posture Check!",
 		type = "basic",
-		iconUrl = "../images/get_started16.png",
+		iconUrl = "../images/zen.jpg",
 		interval = 1,
 		silent = false,
 		timesFired = 0,

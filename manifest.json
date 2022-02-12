@@ -1,6 +1,6 @@
 {
-	"name": "Hello Extensions",
-	"description": "Base Level Extension",
+	"name": "PostureCheck",
+	"description": "Friendly reminders to save your back",
 	"version": "1.0",
 	"manifest_version": 3,
 	"action": {

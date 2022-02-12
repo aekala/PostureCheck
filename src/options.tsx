@@ -78,9 +78,14 @@ function Options() {
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		chrome.runtime.sendMessage({
-			request: "updateAlarm",
-			notificationData,
+		chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+			if (chrome.runtime.lastError) {
+				return chrome.runtime.lastError;
+			}
+			chrome.runtime.sendMessage({
+				request: "updateAlarm",
+				notificationData,
+			});
 		});
 	}
 

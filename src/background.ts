@@ -23,24 +23,23 @@ function eventListener(message, callback, sendResponse) {
 			break;
 		case "updateAlarm":
 			notificationData = message.notificationData;
-			console.log(notificationData);
 			chrome.alarms.clearAll((wasCleared) => {
 				if (!wasCleared) {
 					console.error("Failed to clear all existing alarms");
 				}
+				chrome.alarms.onAlarm.removeListener(alarmListener);
+				if (chrome.alarms.onAlarm.hasListeners()) {
+					console.error("Alarm still has active event listeners attached");
+				}
+				chrome.alarms.create("PostureCheck", {
+					// periodInMinutes: notificationData.interval,
+					periodInMinutes: 0.1,
+				});
+				chrome.alarms.onAlarm.addListener(alarmListener);
+				if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
+					console.error("Failed to attach event listener alarmListener");
+				}
 			});
-			chrome.alarms.onAlarm.removeListener(alarmListener);
-			if (chrome.alarms.onAlarm.hasListeners()) {
-				console.error("Alarm still has active event listeners attached");
-			}
-			chrome.alarms.create("PostureCheck", {
-				// periodInMinutes: notificationData.interval,
-				periodInMinutes: 0.05,
-			});
-			chrome.alarms.onAlarm.addListener(alarmListener);
-			if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
-				console.error("Failed to attach event listener alarmListener");
-			}
 			break;
 	}
 	sendResponse();
@@ -49,24 +48,22 @@ function eventListener(message, callback, sendResponse) {
 chrome.runtime.onMessage.addListener(eventListener);
 
 function alarmListener() {
-	console.log(notificationData);
-	notificationData.timesFired++; //TODO: FIGURE OUT BUG WITH UPDATING TIMES FIRED
-	chrome.storage.sync.set({
-		notificationData: {
-			...notificationData,
-			timesFired: notificationData.timesFired,
-		},
-	});
 	chrome.notifications.clear("PostureAlarm", (wasCleared) => {
 		if (notificationData.timesFired > 0 && !wasCleared) {
 			console.error("Failed to clear all existing notifications");
 		}
-	});
-	chrome.notifications.create("PostureAlarm", {
-		iconUrl: notificationData.iconUrl,
-		title: notificationData.title,
-		message: notificationData.message,
-		type: notificationData.type,
-		silent: notificationData.silent,
+		chrome.storage.sync.set({
+			notificationData: {
+				...notificationData,
+				timesFired: ++notificationData.timesFired,
+			},
+		});
+		chrome.notifications.create("PostureAlarm", {
+			iconUrl: notificationData.iconUrl,
+			title: notificationData.title,
+			message: notificationData.message,
+			type: notificationData.type,
+			silent: notificationData.silent,
+		});
 	});
 }
