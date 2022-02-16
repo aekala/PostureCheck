@@ -5,7 +5,6 @@ export class NotificationData {
 	public iconUrl: string;
 	public interval: number;
 	public silent: boolean;
-	public timesFired: number;
 
 	constructor({
 		title = "PostureCheck",
@@ -14,7 +13,6 @@ export class NotificationData {
 		iconUrl = "../images/zen.jpg",
 		interval = 1,
 		silent = false,
-		timesFired = 0,
 	} = {}) {
 		this.title = title;
 		this.message = message;
@@ -22,6 +20,5 @@ export class NotificationData {
 		this.iconUrl = iconUrl;
 		this.interval = interval;
 		this.silent = silent;
-		this.timesFired = timesFired;
 	}
 }

@@ -77,15 +77,9 @@ function Popup() {
 		timeDisplay = "No Alarm Currently Set";
 	}
 
-	let timesFiredDisplay = "Loading Times Fired...";
-	if (notificationData != null) {
-		timesFiredDisplay = `Times Fired: ${notificationData.timesFired}`;
-	}
-
 	return (
 		<>
 			<p>POPUP TBD</p>
-			<p>{timesFiredDisplay}</p>
 			<p>{timeDisplay}</p>
 		</>
 	);

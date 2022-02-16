@@ -5,7 +5,7 @@ let notificationData: NotificationData;
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.storage.sync.clear();
 	chrome.alarms.clearAll();
-	chrome.notifications.clear("PostureAlarm");
+	chrome.notifications.clear("PostureNotification");
 	const initialNotificationData: NotificationData = new NotificationData();
 	chrome.storage.sync.set({ notificationData: initialNotificationData });
 });
@@ -33,7 +33,7 @@ function eventListener(message, callback, sendResponse) {
 				}
 				chrome.alarms.create("PostureCheck", {
 					// periodInMinutes: notificationData.interval,
-					periodInMinutes: 0.1,
+					periodInMinutes: 0.15,
 				});
 				chrome.alarms.onAlarm.addListener(alarmListener);
 				if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
@@ -48,22 +48,17 @@ function eventListener(message, callback, sendResponse) {
 chrome.runtime.onMessage.addListener(eventListener);
 
 function alarmListener() {
-	chrome.notifications.clear("PostureAlarm", (wasCleared) => {
-		if (notificationData.timesFired > 0 && !wasCleared) {
-			console.error("Failed to clear all existing notifications");
-		}
-		chrome.storage.sync.set({
-			notificationData: {
-				...notificationData,
-				timesFired: ++notificationData.timesFired,
-			},
-		});
-		chrome.notifications.create("PostureAlarm", {
-			iconUrl: notificationData.iconUrl,
-			title: notificationData.title,
-			message: notificationData.message,
-			type: notificationData.type,
-			silent: notificationData.silent,
+	const opts = {
+		iconUrl: notificationData.iconUrl,
+		title: notificationData.title,
+		message: notificationData.message,
+		type: notificationData.type,
+		silent: notificationData.silent,
+		requireInteraction: false,
+	};
+	chrome.notifications.clear("PostureNotification", () => {
+		chrome.notifications.create("PostureNotification", opts, () => {
+			console.log("Last error: " + chrome.runtime.lastError);
 		});
 	});
 }

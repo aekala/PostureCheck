@@ -45,10 +45,6 @@ module.exports = {
 					to: path.join(distDir, "public"),
 				},
 				{
-					from: path.join(baseDir, "styles"),
-					to: path.join(distDir, "styles"),
-				},
-				{
 					from: path.join(baseDir, "images"),
 					to: path.join(distDir, "images"),
 				},
