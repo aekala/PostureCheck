@@ -44,25 +44,14 @@ function Popup() {
 
 	useEffect(() => {
 		if (isInitialMount.current) {
-			// getStoredNotificationData().then((data) => {
-			// 	setNotificationData(data);
-			// 	isInitialMount.current = false;
-			// });
 			updateNotificationDataStateFromStorage();
 			isInitialMount.current = false;
 		}
 	});
 
-	// useEffect(() => {
-	// 	getStoredNotificationData().then((data) => {
-	// 		setNotificationData(data);
-	// 		console.log("UPDATING");
-	// 	});
-	// }, []);
-
 	function getStoredNotificationData(): Promise<NotificationData> {
 		return new Promise((resolve, reject) => {
-			chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+			chrome.storage.local.get("notificationData", ({ notificationData }) => {
 				if (chrome.runtime.lastError) {
 					return reject(chrome.runtime.lastError);
 				}
@@ -72,8 +61,9 @@ function Popup() {
 	}
 
 	function updateNotificationDataStateFromStorage() {
-		getStoredNotificationData().then((data) => {
+		getStoredNotificationData().then((data: NotificationData) => {
 			setNotificationData(data);
+			setIsAlarmPaused(data.pauseStatus.isPaused);
 		});
 	}
 
@@ -89,7 +79,7 @@ function Popup() {
 	}
 
 	function handleAlarmToggleRequest() {
-		chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+		chrome.storage.local.get("notificationData", ({ notificationData }) => {
 			if (chrome.runtime.lastError) {
 				return chrome.runtime.lastError;
 			}
@@ -98,7 +88,7 @@ function Popup() {
 				request: null,
 				timeRemaining: 0,
 			};
-			if (notificationData.pauseStatus.isPaused) {
+			if (isAlarmPaused) {
 				message.request = "resumeAlarm";
 				setIsAlarmPaused(false);
 			} else {
@@ -106,22 +96,16 @@ function Popup() {
 				message.timeRemaining = secondsUntilAlarm;
 				setIsAlarmPaused(true);
 			}
-			// chrome.runtime.sendMessage(message, () => {
-			// 	updateNotificationDataStateFromStorage();
-			// });
 			sendMessage(message);
 		});
 	}
 
 	let timeDisplay = "Loading Time...";
-	// console.log("Alarm is running: " + isAlarmRunning);
-	// console.log("Alarm is paused: " + isAlarmPaused);
-	// console.log(notificationData);
 	if (isAlarmRunning) {
 		if (secondsUntilAlarm != null) {
 			timeDisplay = getTimeDisplay();
 		}
-	} else if (notificationData.pauseStatus.isPaused) {
+	} else if (isAlarmPaused) {
 		timeDisplay = new Date(notificationData.pauseStatus.timeRemaining * 1000)
 			.toISOString()
 			.substring(14, 19);
@@ -142,14 +126,6 @@ function Popup() {
 			notificationData: notificationData,
 			request: "cancelAlarm",
 		};
-		// chrome.runtime.sendMessage(
-		// 	{
-		// 		request: "cancelAlarm",
-		// 	},
-		// 	() => {
-		// 		updateNotificationDataStateFromStorage();
-		// 	}
-		// );
 		sendMessage(message);
 	}
 

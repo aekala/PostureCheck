@@ -16,7 +16,7 @@ function Options() {
 
 	function getStoredNotificationData(): Promise<NotificationData> {
 		return new Promise((resolve, reject) => {
-			chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+			chrome.storage.local.get("notificationData", ({ notificationData }) => {
 				if (chrome.runtime.lastError) {
 					return reject(chrome.runtime.lastError);
 				}
@@ -28,7 +28,7 @@ function Options() {
 	function updateNotificationTitle(e) {
 		const title: string = e.target.value;
 		if (title.length > 0) {
-			chrome.storage.sync.set({
+			chrome.storage.local.set({
 				notificationData: { ...notificationData, title: title },
 			});
 
@@ -41,7 +41,7 @@ function Options() {
 	function updateNotificationMessage(e) {
 		const message: string = e.target.value;
 		if (message.length > 0) {
-			chrome.storage.sync.set({
+			chrome.storage.local.set({
 				notificationData: { ...notificationData, message: message },
 			});
 
@@ -54,7 +54,7 @@ function Options() {
 	function updateNotificationInterval(e) {
 		const interval: number = parseInt(e.target.value);
 		if (interval > 0) {
-			chrome.storage.sync.set({
+			chrome.storage.local.set({
 				notificationData: { ...notificationData, interval: interval },
 			});
 
@@ -67,7 +67,7 @@ function Options() {
 	function updateNotificationSilent(e) {
 		const checked = e.target.checked;
 		if (checked != null) {
-			chrome.storage.sync.set({
+			chrome.storage.local.set({
 				notificationData: { ...notificationData, silent: checked },
 			});
 
@@ -79,7 +79,7 @@ function Options() {
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		chrome.storage.sync.get("notificationData", ({ notificationData }) => {
+		chrome.storage.local.get("notificationData", ({ notificationData }) => {
 			if (chrome.runtime.lastError) {
 				return chrome.runtime.lastError;
 			}

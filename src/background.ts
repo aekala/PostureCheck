@@ -7,12 +7,12 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 function initializeExtensionState() {
-	chrome.storage.sync.clear();
+	chrome.storage.local.clear();
 	chrome.alarms.clearAll();
 	chrome.notifications.clear("PostureNotification");
 	const initialNotificationData: NotificationData = new NotificationData();
 	const postureRatings = [];
-	chrome.storage.sync.set({
+	chrome.storage.local.set({
 		notificationData: initialNotificationData,
 		postureRatings: postureRatings,
 		computerState: "active",
@@ -54,7 +54,7 @@ function eventListener(message, sender, sendResponse) {
 				}
 			});
 			const timeRemaining = message.timeRemaining;
-			chrome.storage.sync.set({
+			chrome.storage.local.set({
 				notificationData: {
 					...notificationData,
 					pauseStatus: { isPaused: true, timeRemaining },
@@ -74,7 +74,7 @@ function eventListener(message, sender, sendResponse) {
 					"Failed to attach event listener alarmListener when resuming alarm"
 				);
 			}
-			chrome.storage.sync.set({
+			chrome.storage.local.set({
 				notificationData: {
 					...notificationData,
 					pauseStatus: { isPaused: false, timeRemaining: 0 },
@@ -91,7 +91,7 @@ function eventListener(message, sender, sendResponse) {
 					console.error("Alarm still has active event listeners attached");
 				}
 
-				chrome.storage.sync.set({
+				chrome.storage.local.set({
 					notificationData: {
 						...notificationData,
 						pauseStatus: { isPaused: false, timeRemaining: 0 },
@@ -109,7 +109,7 @@ function eventListener(message, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(eventListener);
 
 function alarmListener() {
-	chrome.storage.sync.get("computerState", ({ computerState }) => {
+	chrome.storage.local.get("computerState", ({ computerState }) => {
 		if (computerState == "active") {
 			const button1 = { title: "👍" };
 			const button2 = { title: "👎" };
@@ -141,14 +141,14 @@ function notificationRatingsListener(
 	console.log(buttonIndex);
 	const rating = 1 - buttonIndex;
 	const ratingObj = { timestamp: Date.now(), rating: rating };
-	chrome.storage.sync.get("postureRatings", ({ postureRatings }) => {
+	chrome.storage.local.get("postureRatings", ({ postureRatings }) => {
 		postureRatings.push(ratingObj);
-		chrome.storage.sync.set({ postureRatings: postureRatings });
+		chrome.storage.local.set({ postureRatings: postureRatings });
 	});
 }
 
 chrome.idle.onStateChanged.addListener(idleStateListener);
 
 function idleStateListener(newState: chrome.idle.IdleState) {
-	chrome.storage.sync.set({ computerState: newState });
+	chrome.storage.local.set({ computerState: newState });
 }
