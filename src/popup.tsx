@@ -90,11 +90,9 @@ function Popup() {
 			};
 			if (isAlarmPaused) {
 				message.request = "resumeAlarm";
-				setIsAlarmPaused(false);
 			} else {
 				message.request = "pauseAlarm";
 				message.timeRemaining = secondsUntilAlarm;
-				setIsAlarmPaused(true);
 			}
 			sendMessage(message);
 		});
@@ -121,7 +119,6 @@ function Popup() {
 	}
 
 	function handleAlarmCancelRequest() {
-		setIsAlarmPaused(false);
 		let message = {
 			notificationData: notificationData,
 			request: "cancelAlarm",
@@ -134,7 +131,6 @@ function Popup() {
 			request: "resetExtension",
 		};
 
-		setIsAlarmPaused(false);
 		sendMessage(message);
 	}
 
