@@ -10,6 +10,7 @@ function Options() {
 	useEffect(() => {
 		getStoredNotificationData().then((data) => {
 			setNotificationData(data);
+			console.log("UPDATING");
 		});
 	}, []);
 
