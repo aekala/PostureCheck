@@ -8,6 +8,7 @@ module.exports = {
 	entry: {
 		popup: path.join(srcDir, "popup.tsx"),
 		options: path.join(srcDir, "options.tsx"),
+		homepage: path.join(srcDir, "homepage.tsx"),
 		background: path.join(srcDir, "background.ts"),
 	},
 	output: {
@@ -51,6 +52,10 @@ module.exports = {
 				{
 					from: path.join(baseDir, "manifest.json"),
 					to: path.join(distDir),
+				},
+				{
+					from: path.join(baseDir, "styles"),
+					to: path.join(distDir, "styles"),
 				},
 			],
 		}),

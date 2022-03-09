@@ -1,0 +1,68 @@
+/* GLOBAL */
+button {
+	border: 1px solid #61dafb;
+	color: #61dafb;
+	border-radius: 5px;
+}
+
+.btn:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+/* POPUP */
+.container {
+	width: 400px;
+	height: 400px;
+	background-color: #262b40;
+}
+
+.tabsContainer {
+}
+
+.contentContainer {
+	margin-top: 1em;
+	color: white;
+}
+
+.nav-item {
+	background-color: #61dafb;
+}
+
+/* HOMEPAGE */
+.homepageContainer {
+	cursor: default;
+	caret-color: transparent;
+}
+
+.timerContainer {
+	width: 220px;
+	height: 220px;
+	border: 5px solid #61dafb;
+	border-radius: 50%;
+}
+
+.timer {
+	font-size: 18px;
+	text-align: center;
+	line-height: 200px;
+}
+
+.timer.timerActive {
+	font-size: 50px;
+}
+
+.timerLabel {
+	font-size: 20px;
+	text-align: center;
+	height: 40px;
+}
+
+.buttonsContainer {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	justify-items: center;
+}
+
+/* HELP PAGE */

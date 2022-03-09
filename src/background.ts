@@ -21,16 +21,20 @@ function initializeExtensionState() {
 }
 
 function eventListener(message, sender, sendResponse) {
+	let result: any = {};
 	switch (message.request) {
 		case "updateAlarm":
 			notificationData = message.notificationData;
+			let alarmCreationSuccess = true;
 			chrome.alarms.clearAll((wasCleared) => {
 				if (!wasCleared) {
 					console.error("Failed to clear all existing alarms");
+					alarmCreationSuccess = false;
 				}
 				chrome.alarms.onAlarm.removeListener(alarmListener);
 				if (chrome.alarms.onAlarm.hasListeners()) {
 					console.error("Alarm still has active event listeners attached");
+					alarmCreationSuccess = false;
 				}
 				chrome.alarms.create("PostureCheck", {
 					// periodInMinutes: notificationData.interval,
@@ -39,18 +43,23 @@ function eventListener(message, sender, sendResponse) {
 				chrome.alarms.onAlarm.addListener(alarmListener);
 				if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
 					console.error("Failed to attach event listener alarmListener");
+					result.alarmCreationSuccess = false;
 				}
 			});
+			result.alarmCreationSuccess = alarmCreationSuccess;
 			break;
 		case "pauseAlarm":
 			notificationData = message.notificationData;
+			let alarmPauseSuccess = true;
 			chrome.alarms.clearAll((wasCleared) => {
 				if (!wasCleared) {
 					console.error("Failed to clear all existing alarms");
+					alarmPauseSuccess = false;
 				}
 				chrome.alarms.onAlarm.removeListener(alarmListener);
 				if (chrome.alarms.onAlarm.hasListeners()) {
 					console.error("Alarm still has active event listeners attached");
+					alarmPauseSuccess = false;
 				}
 			});
 			const timeRemaining = message.timeRemaining;
@@ -60,9 +69,11 @@ function eventListener(message, sender, sendResponse) {
 					pauseStatus: { isPaused: true, timeRemaining },
 				},
 			});
+			result.alarmPauseSuccess = alarmPauseSuccess;
 			break;
 		case "resumeAlarm":
 			notificationData = message.notificationData;
+			let alarmResumeSuccess = true;
 			chrome.alarms.create("PostureCheck", {
 				periodInMinutes: 0.15,
 				delayInMinutes: notificationData.pauseStatus.timeRemaining / 60.0,
@@ -73,6 +84,7 @@ function eventListener(message, sender, sendResponse) {
 				console.error(
 					"Failed to attach event listener alarmListener when resuming alarm"
 				);
+				alarmResumeSuccess = false;
 			}
 			chrome.storage.local.set({
 				notificationData: {
@@ -80,15 +92,19 @@ function eventListener(message, sender, sendResponse) {
 					pauseStatus: { isPaused: false, timeRemaining: 0 },
 				},
 			});
+			result.alarmResumeSuccess = alarmResumeSuccess;
 			break;
 		case "cancelAlarm":
+			let alarmCancelSuccess = true;
 			chrome.alarms.clearAll((wasCleared) => {
 				if (!wasCleared) {
 					console.error("Failed to clear all existing alarms");
+					alarmCancelSuccess = false;
 				}
 				chrome.alarms.onAlarm.removeListener(alarmListener);
 				if (chrome.alarms.onAlarm.hasListeners()) {
 					console.error("Alarm still has active event listeners attached");
+					alarmCancelSuccess = false;
 				}
 
 				chrome.storage.local.set({
@@ -98,12 +114,13 @@ function eventListener(message, sender, sendResponse) {
 					},
 				});
 			});
+			result.alarmCancelSuccess = alarmCancelSuccess;
 			break;
 		case "resetExtension":
 			initializeExtensionState();
 			break;
 	}
-	sendResponse();
+	sendResponse(result);
 }
 
 chrome.runtime.onMessage.addListener(eventListener);

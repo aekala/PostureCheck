@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import { NotificationData } from "./notificationData";
+import { Container, Alert, Button } from "react-bootstrap";
 
-function Options() {
+export default function Options() {
 	const [notificationData, setNotificationData] = useState(
 		new NotificationData()
 	);
+	const [showAlarmCreationAlert, setShowAlarmCreationAlert] = useState(false);
+	const [alarmCreationProps, setAlarmCreationProps] = useState({
+		variant: "success",
+		message: "Alarm Created Successfully!",
+	});
 
 	useEffect(() => {
 		getStoredNotificationData().then((data) => {
 			setNotificationData(data);
-			console.log("UPDATING");
 		});
 	}, []);
 
@@ -83,15 +87,33 @@ function Options() {
 			if (chrome.runtime.lastError) {
 				return chrome.runtime.lastError;
 			}
-			chrome.runtime.sendMessage({
-				request: "updateAlarm",
-				notificationData,
-			});
+			chrome.runtime.sendMessage(
+				{
+					request: "updateAlarm",
+					notificationData,
+				},
+				(response) => {
+					const alarmResultObj = response.alarmCreationSuccess
+						? { variant: "success", message: "Alarm Created Successfully" }
+						: { variant: "danger", message: "Alarm was unable to be created" };
+					setShowAlarmCreationAlert(true);
+					setAlarmCreationProps(alarmResultObj);
+				}
+			);
 		});
 	}
 
 	return (
-		<>
+		<Container fluid>
+			{showAlarmCreationAlert && (
+				<Alert
+					variant={alarmCreationProps.variant}
+					onClose={() => setShowAlarmCreationAlert(false)}
+					dismissible
+				>
+					{alarmCreationProps.message}
+				</Alert>
+			)}
 			<form onSubmit={handleSubmit}>
 				<label htmlFor='title'>Title</label>
 				<input
@@ -125,15 +147,10 @@ function Options() {
 					checked={notificationData.silent}
 					onChange={updateNotificationSilent}
 				/>
-				<input type='submit' value='Submit' />
+				<Button variant='outline-primary' type='submit'>
+					Set Alarm
+				</Button>
 			</form>
-		</>
+		</Container>
 	);
 }
-
-ReactDOM.render(
-	<React.StrictMode>
-		<Options />
-	</React.StrictMode>,
-	document.getElementById("root")
-);
