@@ -1,8 +1,13 @@
 /* GLOBAL */
-button {
+:root {
+	font-size: 62.5%;
+}
+
+.button {
 	border: 1px solid #61dafb;
 	color: #61dafb;
-	border-radius: 5px;
+	border-radius: 1rem;
+	font-size: 2rem;
 }
 
 .btn:focus {
@@ -10,14 +15,20 @@ button {
 	box-shadow: none;
 }
 
-/* POPUP */
-.container {
-	width: 400px;
-	height: 400px;
+.btn:hover {
+	background-color: teal;
+}
+
+body {
+	font-size: 1.6rem;
 	background-color: #262b40;
 }
 
-.tabsContainer {
+/* POPUP */
+.mainContainer {
+	width: 40rem;
+	height: 40rem;
+	background-color: #262b40;
 }
 
 .contentContainer {
@@ -26,7 +37,15 @@ button {
 }
 
 .nav-item {
-	background-color: #61dafb;
+	background-color: teal;
+}
+
+.nav-link {
+	color: white !important;
+}
+
+.nav-link.active {
+	background-color: #41cc87 !important;
 }
 
 /* HOMEPAGE */
@@ -36,33 +55,41 @@ button {
 }
 
 .timerContainer {
-	width: 220px;
-	height: 220px;
+	width: 22rem;
+	height: 22rem;
 	border: 5px solid #61dafb;
 	border-radius: 50%;
 }
 
 .timer {
-	font-size: 18px;
+	font-size: 1.8rem;
 	text-align: center;
-	line-height: 200px;
+	line-height: 20rem;
 }
 
 .timer.timerActive {
-	font-size: 50px;
+	font-size: 5rem;
 }
 
 .timerLabel {
-	font-size: 20px;
+	font-size: 2rem;
 	text-align: center;
-	height: 40px;
+	height: 4rem;
 }
 
 .buttonsContainer {
-	margin-top: 20px;
+	margin-top: 2rem;
 	display: flex;
 	justify-content: center;
 	justify-items: center;
 }
 
+/* OPTIONS PAGE */
+.form-control {
+	font-size: 1.5rem;
+}
+
 /* HELP PAGE */
+.homepageContainer p {
+	font-size: 1.5rem;
+}

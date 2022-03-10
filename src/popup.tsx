@@ -30,23 +30,19 @@ function Popup() {
 	};
 
 	return (
-		// <div className='container'>
-		<Container fluid className='container'>
-			<div className='tabsContainer'>
-				<Nav fill variant='tabs' activeKey={key} onSelect={(k) => setKey(k)}>
-					<Nav.Item>
-						<Nav.Link eventKey='home'>Home</Nav.Link>
-					</Nav.Item>
-					<Nav.Item>
-						<Nav.Link eventKey='options'>Options</Nav.Link>
-					</Nav.Item>
-					<Nav.Item>
-						<Nav.Link eventKey='help'>Help</Nav.Link>
-					</Nav.Item>
-				</Nav>
-			</div>
+		<Container fluid className='mainContainer p-0'>
+			<Nav fill variant='tabs' activeKey={key} onSelect={(k) => setKey(k)}>
+				<Nav.Item>
+					<Nav.Link eventKey='home'>Home</Nav.Link>
+				</Nav.Item>
+				<Nav.Item>
+					<Nav.Link eventKey='options'>Options</Nav.Link>
+				</Nav.Item>
+				<Nav.Item>
+					<Nav.Link eventKey='help'>Help</Nav.Link>
+				</Nav.Item>
+			</Nav>
 			<div className='contentContainer'>{content()}</div>
-			{/* // </div> */}
 		</Container>
 	);
 }

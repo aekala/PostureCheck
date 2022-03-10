@@ -9,7 +9,7 @@ export class NotificationData {
 
 	constructor({
 		title = "PostureCheck",
-		message = "Posture Check!",
+		message = "How's Your Posture?",
 		type = "basic",
 		iconUrl = "../images/zen.jpg",
 		interval = 1,

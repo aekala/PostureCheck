@@ -19,7 +19,9 @@ export default function HomePage(props) {
 				let timeUntilAlarm = null;
 				if (alarm != null) {
 					setIsAlarmRunning(true);
-					timeUntilAlarm = Math.ceil((alarm.scheduledTime - Date.now()) / 1000);
+					timeUntilAlarm = Math.floor(
+						(alarm.scheduledTime - Date.now()) / 1000
+					);
 					if (timeUntilAlarm < 0) {
 						timeUntilAlarm = 0;
 					}
@@ -157,7 +159,7 @@ export default function HomePage(props) {
 				<Col />
 				<Col>
 					<div className='timerContainer'>
-						<div className={"timer " + (isAlarmSet ? "timerActive" : "")}>
+						<div className={"timer " + (isAlarmSet && "timerActive")}>
 							{timeDisplay}
 						</div>
 					</div>
@@ -171,8 +173,9 @@ export default function HomePage(props) {
 							<Button
 								variant='outline-primary'
 								onClick={props.changeViewToOptionsPage}
+								className='button'
 							>
-								Set Alarm
+								Create Alarm
 							</Button>
 						</Col>
 					</Row>
@@ -183,6 +186,7 @@ export default function HomePage(props) {
 							<Button
 								variant='outline-primary'
 								onClick={handleAlarmToggleRequest}
+								className='button'
 							>
 								{toggleDisplay}
 							</Button>
@@ -191,6 +195,7 @@ export default function HomePage(props) {
 							<Button
 								variant='outline-primary'
 								onClick={handleAlarmCancelRequest}
+								className='button'
 							>
 								Cancel
 							</Button>

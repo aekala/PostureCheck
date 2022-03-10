@@ -16,15 +16,31 @@ export default function HelpPage() {
 	}
 
 	return (
-		<Container fluid>
+		<Container fluid className='homepageContainer'>
 			<Row>
-				<p>HOW TO USE POSTURECHECK</p>
+				<h1>How To Use PostureCheck</h1>
+				<p>
+					PostureCheck allows you to set an alarm to gives off a notification
+					reminding you to check in on your posture
+				</p>
+				<p>
+					There is a default alarm of 10 minutes, but if you wish to create an
+					alarm to your preferences you can make those changes in the Options
+					tab. There you can adjust the time interval for notifications, as well
+					as the title and message for your notifications.
+				</p>
+				<p>
+					If you have having issues, it may help to reset the extension via the
+					button below. It will clear the existing alarm and the local storage
+					within Chrome this extension utilizes.
+				</p>
 			</Row>
 			<Row>
 				<Col>
 					<Button
 						variant='outline-primary'
 						onClick={handleExtensionResetRequest}
+						className='button'
 					>
 						Reset Extension
 					</Button>

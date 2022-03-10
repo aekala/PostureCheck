@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NotificationData } from "./notificationData";
-import { Container, Alert, Button } from "react-bootstrap";
+import { Container, Alert, Button, Form } from "react-bootstrap";
 
 export default function Options() {
 	const [notificationData, setNotificationData] = useState(
@@ -12,7 +12,11 @@ export default function Options() {
 		message: "Alarm Created Successfully!",
 	});
 
+	//TODO: create state hook to keep track of changes to form (make it so it's not updating from chrome local storage every time)
+	//TODO: add validation to form fields
+
 	useEffect(() => {
+		console.log("hi");
 		getStoredNotificationData().then((data) => {
 			setNotificationData(data);
 		});
@@ -114,43 +118,54 @@ export default function Options() {
 					{alarmCreationProps.message}
 				</Alert>
 			)}
-			<form onSubmit={handleSubmit}>
-				<label htmlFor='title'>Title</label>
-				<input
-					type='text'
-					id='title'
-					name='title'
-					value={notificationData.title}
-					onChange={updateNotificationTitle}
-				/>
-				<label htmlFor='message'>Message</label>
-				<input
-					type='text'
-					id='message'
-					name='message'
-					value={notificationData.message}
-					onChange={updateNotificationMessage}
-				/>
-				<label htmlFor='interval'>Time Between Alerts (in minutes)</label>
-				<input
-					type='number'
-					id='interval'
-					name='interval'
-					value={notificationData.interval}
-					onChange={updateNotificationInterval}
-				/>
-				<label htmlFor='silent'>Silent Notifications</label>
-				<input
-					type='checkbox'
-					id='silent'
-					name='interval'
-					checked={notificationData.silent}
-					onChange={updateNotificationSilent}
-				/>
-				<Button variant='outline-primary' type='submit'>
+
+			<Form onSubmit={handleSubmit}>
+				<Form.Group className='mb-3' controlId='formNotificationTitle'>
+					<Form.Label htmlFor='title'>Title</Form.Label>
+					<Form.Control
+						type='text'
+						id='title'
+						name='title'
+						value={notificationData.title}
+						onChange={updateNotificationTitle}
+					/>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formNotificationMessage'>
+					<Form.Label htmlFor='message'>Message</Form.Label>
+					<Form.Control
+						type='text'
+						id='message'
+						name='message'
+						value={notificationData.message}
+						onChange={updateNotificationMessage}
+					/>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formNotificationInterval'>
+					<Form.Label htmlFor='interval'>
+						Time Between Alerts (in minutes)
+					</Form.Label>
+					<Form.Control
+						type='number'
+						id='interval'
+						name='interval'
+						value={notificationData.interval}
+						onChange={updateNotificationInterval}
+					/>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formNotificationSilent'>
+					<Form.Check
+						type='checkbox'
+						id='silent'
+						name='interval'
+						label='Silent Notifications'
+						checked={notificationData.silent}
+						onChange={updateNotificationSilent}
+					/>
+				</Form.Group>
+				<Button variant='outline-primary' type='submit' className='button'>
 					Set Alarm
 				</Button>
-			</form>
+			</Form>
 		</Container>
 	);
 }
