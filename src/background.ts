@@ -11,10 +11,8 @@ function initializeExtensionState() {
 	chrome.alarms.clearAll();
 	chrome.notifications.clear("PostureNotification");
 	const initialNotificationData: NotificationData = new NotificationData();
-	const postureRatings = [];
 	chrome.storage.local.set({
 		notificationData: initialNotificationData,
-		postureRatings: postureRatings,
 		computerState: "active",
 	});
 	chrome.idle.setDetectionInterval(15);
@@ -128,39 +126,20 @@ chrome.runtime.onMessage.addListener(eventListener);
 function alarmListener() {
 	chrome.storage.local.get("computerState", ({ computerState }) => {
 		if (computerState == "active") {
-			const button1 = { title: "👍" };
-			const button2 = { title: "👎" };
 			const opts = {
 				iconUrl: notificationData.iconUrl,
 				title: notificationData.title,
-				message: notificationData.message + "\nHow is your posture right now?",
+				message: notificationData.message,
 				type: notificationData.type,
 				silent: notificationData.silent,
 				requireInteraction: false,
-				buttons: [button1, button2],
 			};
 			chrome.notifications.clear("PostureNotification", () => {
 				chrome.notifications.create("PostureNotification", opts, () => {
-					console.log("Last error: " + chrome.runtime.lastError);
+					console.error("Last error: " + chrome.runtime.lastError);
 				});
 			});
 		}
-	});
-}
-
-chrome.notifications.onButtonClicked.addListener(notificationRatingsListener);
-
-function notificationRatingsListener(
-	notificationId: string,
-	buttonIndex: number
-) {
-	console.log(notificationId);
-	console.log(buttonIndex);
-	const rating = 1 - buttonIndex;
-	const ratingObj = { timestamp: Date.now(), rating: rating };
-	chrome.storage.local.get("postureRatings", ({ postureRatings }) => {
-		postureRatings.push(ratingObj);
-		chrome.storage.local.set({ postureRatings: postureRatings });
 	});
 }
 

@@ -26,9 +26,8 @@ body {
 
 /* POPUP */
 .mainContainer {
-	width: 40rem;
+	width: 39rem;
 	height: 40rem;
-	background-color: #262b40;
 }
 
 .contentContainer {

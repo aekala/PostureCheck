@@ -16,7 +16,6 @@ export default function Options() {
 	//TODO: add validation to form fields
 
 	useEffect(() => {
-		console.log("hi");
 		getStoredNotificationData().then((data) => {
 			setNotificationData(data);
 		});
