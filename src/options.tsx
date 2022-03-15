@@ -6,18 +6,22 @@ export default function Options() {
 	const [notificationData, setNotificationData] = useState(
 		new NotificationData()
 	);
+
+	const [options, setOptions] = useState(new NotificationData());
+
 	const [showAlarmCreationAlert, setShowAlarmCreationAlert] = useState(false);
 	const [alarmCreationProps, setAlarmCreationProps] = useState({
 		variant: "success",
 		message: "Alarm Created Successfully!",
 	});
 
-	//TODO: create state hook to keep track of changes to form (make it so it's not updating from chrome local storage every time)
+	//TODO: maybe need to add save options button? play around to see what's most intuitive for a user
 	//TODO: add validation to form fields
 
 	useEffect(() => {
 		getStoredNotificationData().then((data) => {
 			setNotificationData(data);
+			setOptions(data);
 		});
 	}, []);
 
@@ -32,73 +36,55 @@ export default function Options() {
 		});
 	}
 
-	function updateNotificationTitle(e) {
+	function updateTitle(e) {
 		const title: string = e.target.value;
-		if (title.length > 0) {
-			chrome.storage.local.set({
-				notificationData: { ...notificationData, title: title },
-			});
-
-			setNotificationData(
-				new NotificationData({ ...notificationData, title: title })
-			);
-		}
+		setOptions({ ...options, title: title });
 	}
 
-	function updateNotificationMessage(e) {
+	function updateMessage(e) {
 		const message: string = e.target.value;
-		if (message.length > 0) {
-			chrome.storage.local.set({
-				notificationData: { ...notificationData, message: message },
-			});
-
-			setNotificationData(
-				new NotificationData({ ...notificationData, message: message })
-			);
-		}
+		setOptions({
+			...options,
+			message: message,
+		});
 	}
 
-	function updateNotificationInterval(e) {
+	function updateInterval(e) {
 		const interval: number = parseInt(e.target.value);
-		if (interval > 0) {
-			chrome.storage.local.set({
-				notificationData: { ...notificationData, interval: interval },
-			});
-
-			setNotificationData(
-				new NotificationData({ ...notificationData, interval: interval })
-			);
-		}
+		setOptions({
+			...options,
+			interval: interval,
+		});
 	}
 
-	function updateNotificationSilent(e) {
+	function updateSilent(e) {
 		const checked = e.target.checked;
 		if (checked != null) {
-			chrome.storage.local.set({
-				notificationData: { ...notificationData, silent: checked },
+			setOptions({
+				...options,
+				silent: checked,
 			});
-
-			setNotificationData(
-				new NotificationData({ ...notificationData, silent: checked })
-			);
 		}
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		chrome.storage.local.get("notificationData", ({ notificationData }) => {
+		chrome.storage.local.set({ notificationData: options }, () => {
 			if (chrome.runtime.lastError) {
 				return chrome.runtime.lastError;
 			}
 			chrome.runtime.sendMessage(
 				{
 					request: "updateAlarm",
-					notificationData,
+					notificationData: options,
 				},
 				(response) => {
 					const alarmResultObj = response.alarmCreationSuccess
 						? { variant: "success", message: "Alarm Created Successfully" }
-						: { variant: "danger", message: "Alarm was unable to be created" };
+						: {
+								variant: "danger",
+								message: "Alarm was unable to be created",
+						  };
 					setShowAlarmCreationAlert(true);
 					setAlarmCreationProps(alarmResultObj);
 				}
@@ -125,8 +111,8 @@ export default function Options() {
 						type='text'
 						id='title'
 						name='title'
-						value={notificationData.title}
-						onChange={updateNotificationTitle}
+						value={options.title}
+						onChange={updateTitle}
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationMessage'>
@@ -135,8 +121,8 @@ export default function Options() {
 						type='text'
 						id='message'
 						name='message'
-						value={notificationData.message}
-						onChange={updateNotificationMessage}
+						value={options.message}
+						onChange={updateMessage}
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationInterval'>
@@ -147,8 +133,8 @@ export default function Options() {
 						type='number'
 						id='interval'
 						name='interval'
-						value={notificationData.interval}
-						onChange={updateNotificationInterval}
+						value={options.interval}
+						onChange={updateInterval}
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationSilent'>
@@ -157,8 +143,8 @@ export default function Options() {
 						id='silent'
 						name='interval'
 						label='Silent Notifications'
-						checked={notificationData.silent}
-						onChange={updateNotificationSilent}
+						checked={options.silent}
+						onChange={updateSilent}
 					/>
 				</Form.Group>
 				<Button variant='outline-primary' type='submit' className='button'>

@@ -96,6 +96,7 @@ export default function HomePage(props) {
 				timeRemaining: 0,
 			};
 			if (isAlarmPaused) {
+				//TODO: fix bug where if new alarm is created while current alarm is paused, button still shows "resume" instead of "pause" for the new alarm
 				message.request = "resumeAlarm";
 			} else {
 				message.request = "pauseAlarm";
