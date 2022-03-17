@@ -136,7 +136,9 @@ function alarmListener() {
 			};
 			chrome.notifications.clear("PostureNotification", () => {
 				chrome.notifications.create("PostureNotification", opts, () => {
-					console.error("Last error: " + chrome.runtime.lastError);
+					if (chrome.runtime.lastError) {
+						console.error("Last error: " + chrome.runtime.lastError);
+					}
 				});
 			});
 		}
