@@ -88,6 +88,10 @@ body {
 	font-size: 1.5rem;
 }
 
+.form-check-label {
+	color: white !important;
+}
+
 /* HELP PAGE */
 .homepageContainer p {
 	font-size: 1.5rem;

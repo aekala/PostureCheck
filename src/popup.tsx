@@ -19,13 +19,10 @@ function Popup() {
 						changeViewToOptionsPage={() => setKey("options")}
 					/>
 				);
-				break;
 			case "options":
 				return <Options />;
-				break;
 			case "help":
 				return <HelpPage />;
-				break;
 		}
 	};
 

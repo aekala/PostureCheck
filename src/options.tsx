@@ -3,25 +3,23 @@ import { NotificationData } from "./notificationData";
 import { Container, Alert, Button, Form } from "react-bootstrap";
 
 export default function Options() {
-	const [notificationData, setNotificationData] = useState(
-		new NotificationData()
-	);
-
 	const [options, setOptions] = useState(new NotificationData());
-
 	const [showAlarmCreationAlert, setShowAlarmCreationAlert] = useState(false);
 	const [alarmCreationProps, setAlarmCreationProps] = useState({
 		variant: "success",
 		message: "Alarm Created Successfully!",
 	});
-
-	//TODO: maybe need to add save options button? play around to see what's most intuitive for a user
-	//TODO: add validation to form fields
+	const [validated, setValidated] = useState(false);
 
 	useEffect(() => {
 		getStoredNotificationData().then((data) => {
-			setNotificationData(data);
-			setOptions(data);
+			setOptions({
+				...data,
+				pauseStatus: {
+					isPaused: false,
+					timeRemaining: 0,
+				},
+			});
 		});
 	}, []);
 
@@ -50,11 +48,13 @@ export default function Options() {
 	}
 
 	function updateInterval(e) {
-		const interval: number = parseInt(e.target.value);
-		setOptions({
-			...options,
-			interval: interval,
-		});
+		if (e.target.value != NaN) {
+			const interval: number = parseInt(e.target.value);
+			setOptions({
+				...options,
+				interval: interval,
+			});
+		}
 	}
 
 	function updateSilent(e) {
@@ -69,27 +69,33 @@ export default function Options() {
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		chrome.storage.local.set({ notificationData: options }, () => {
-			if (chrome.runtime.lastError) {
-				return chrome.runtime.lastError;
-			}
-			chrome.runtime.sendMessage(
-				{
-					request: "updateAlarm",
-					notificationData: options,
-				},
-				(response) => {
-					const alarmResultObj = response.alarmCreationSuccess
-						? { variant: "success", message: "Alarm Created Successfully" }
-						: {
-								variant: "danger",
-								message: "Alarm was unable to be created",
-						  };
-					setShowAlarmCreationAlert(true);
-					setAlarmCreationProps(alarmResultObj);
+		e.stopPropagation();
+		const form = e.currentTarget;
+		if (form.checkValidity()) {
+			chrome.storage.local.set({ notificationData: options }, () => {
+				if (chrome.runtime.lastError) {
+					return chrome.runtime.lastError;
 				}
-			);
-		});
+				chrome.runtime.sendMessage(
+					{
+						request: "updateAlarm",
+						notificationData: options,
+					},
+					(response) => {
+						const alarmResultObj = response.alarmCreationSuccess
+							? { variant: "success", message: "Alarm Created Successfully" }
+							: {
+									variant: "danger",
+									message: "Alarm was unable to be created",
+							  };
+						setShowAlarmCreationAlert(true);
+						setAlarmCreationProps(alarmResultObj);
+					}
+				);
+			});
+		}
+
+		setValidated(true);
 	}
 
 	return (
@@ -104,7 +110,7 @@ export default function Options() {
 				</Alert>
 			)}
 
-			<Form onSubmit={handleSubmit}>
+			<Form onSubmit={handleSubmit} noValidate validated={validated}>
 				<Form.Group className='mb-3' controlId='formNotificationTitle'>
 					<Form.Label htmlFor='title'>Title</Form.Label>
 					<Form.Control
@@ -113,7 +119,13 @@ export default function Options() {
 						name='title'
 						value={options.title}
 						onChange={updateTitle}
+						minLength={1}
+						maxLength={50}
+						required
 					/>
+					<Form.Control.Feedback type='invalid'>
+						Please enter a title between 1 and 50 characters
+					</Form.Control.Feedback>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationMessage'>
 					<Form.Label htmlFor='message'>Message</Form.Label>
@@ -123,11 +135,17 @@ export default function Options() {
 						name='message'
 						value={options.message}
 						onChange={updateMessage}
+						minLength={1}
+						maxLength={50}
+						required
 					/>
+					<Form.Control.Feedback type='invalid'>
+						Please enter a message between 1 and 50 characters
+					</Form.Control.Feedback>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationInterval'>
 					<Form.Label htmlFor='interval'>
-						Time Between Alerts (in minutes)
+						Time Between Alerts (minutes)
 					</Form.Label>
 					<Form.Control
 						type='number'
@@ -135,13 +153,21 @@ export default function Options() {
 						name='interval'
 						value={options.interval}
 						onChange={updateInterval}
+						min={1}
+						max={60}
+						step='1'
+						autoComplete='off'
+						required
 					/>
+					<Form.Control.Feedback type='invalid'>
+						Please enter a number between 1-60.
+					</Form.Control.Feedback>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationSilent'>
 					<Form.Check
-						type='checkbox'
+						type='switch'
 						id='silent'
-						name='interval'
+						name='silent'
 						label='Silent Notifications'
 						checked={options.silent}
 						onChange={updateSilent}

@@ -3,7 +3,7 @@ import { NotificationData } from "./notificationData";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
 export default function HomePage(props) {
-	const [notificationData, setNotificationData] = useState(null);
+	const [data, setData] = useState(null);
 	const [isAlarmRunning, setIsAlarmRunning] = useState(false);
 	const [isAlarmPaused, setIsAlarmPaused] = useState(false);
 	const [secondsUntilAlarm, setSecondsUntilAlarm] = useState(null);
@@ -64,9 +64,9 @@ export default function HomePage(props) {
 	}
 
 	function updateNotificationDataStateFromStorage() {
-		getStoredNotificationData().then((data: NotificationData) => {
-			setNotificationData(data);
-			setIsAlarmPaused(data.pauseStatus.isPaused);
+		getStoredNotificationData().then((notificationData: NotificationData) => {
+			setData(notificationData);
+			setIsAlarmPaused(notificationData.pauseStatus.isPaused);
 		});
 	}
 
@@ -96,7 +96,6 @@ export default function HomePage(props) {
 				timeRemaining: 0,
 			};
 			if (isAlarmPaused) {
-				//TODO: fix bug where if new alarm is created while current alarm is paused, button still shows "resume" instead of "pause" for the new alarm
 				message.request = "resumeAlarm";
 			} else {
 				message.request = "pauseAlarm";
@@ -112,7 +111,7 @@ export default function HomePage(props) {
 			timeDisplay = getTimeDisplay();
 		}
 	} else if (isAlarmPaused) {
-		timeDisplay = new Date(notificationData.pauseStatus.timeRemaining * 1000)
+		timeDisplay = new Date(data.pauseStatus.timeRemaining * 1000)
 			.toISOString()
 			.substring(14, 19);
 	} else {
@@ -130,7 +129,7 @@ export default function HomePage(props) {
 
 	function handleAlarmCancelRequest() {
 		let message = {
-			notificationData: notificationData,
+			notificationData: data,
 			request: "cancelAlarm",
 		};
 		props.setTimeDisplay(null);

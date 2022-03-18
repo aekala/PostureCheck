@@ -104,13 +104,12 @@ function eventListener(message, sender, sendResponse) {
 					console.error("Alarm still has active event listeners attached");
 					alarmCancelSuccess = false;
 				}
-
-				chrome.storage.local.set({
-					notificationData: {
-						...notificationData,
-						pauseStatus: { isPaused: false, timeRemaining: 0 },
-					},
-				});
+			});
+			chrome.storage.local.set({
+				notificationData: {
+					...notificationData,
+					pauseStatus: { isPaused: false, timeRemaining: 0 },
+				},
 			});
 			result.alarmCancelSuccess = alarmCancelSuccess;
 			break;
