@@ -48,13 +48,11 @@ export default function Options() {
 	}
 
 	function updateInterval(e) {
-		if (e.target.value != NaN) {
-			const interval: number = parseInt(e.target.value);
-			setOptions({
-				...options,
-				interval: interval,
-			});
-		}
+		const interval: number = parseInt(e.target.value);
+		setOptions({
+			...options,
+			interval: interval,
+		});
 	}
 
 	function updateSilent(e) {
@@ -124,7 +122,7 @@ export default function Options() {
 						required
 					/>
 					<Form.Control.Feedback type='invalid'>
-						Please enter a title between 1 and 50 characters
+						Please enter a title between 1 and 50 characters.
 					</Form.Control.Feedback>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationMessage'>
@@ -140,7 +138,7 @@ export default function Options() {
 						required
 					/>
 					<Form.Control.Feedback type='invalid'>
-						Please enter a message between 1 and 50 characters
+						Please enter a message between 1 and 50 characters.
 					</Form.Control.Feedback>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationInterval'>
@@ -151,16 +149,16 @@ export default function Options() {
 						type='number'
 						id='interval'
 						name='interval'
-						value={options.interval}
+						value={options.interval || ""}
 						onChange={updateInterval}
 						min={1}
-						max={160}
+						max={180}
 						step='1'
 						autoComplete='off'
 						required
 					/>
 					<Form.Control.Feedback type='invalid'>
-						Please enter a number between 1-60.
+						Please enter a number between 1-180.
 					</Form.Control.Feedback>
 				</Form.Group>
 				<Form.Group className='mb-3' controlId='formNotificationSilent'>

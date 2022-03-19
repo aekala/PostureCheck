@@ -73,14 +73,16 @@ export default function HomePage(props) {
 		const ISOTimeUntilAlarm = new Date(secondsUntilAlarm * 1000).toISOString();
 		let timeDisplay: string = "";
 
-		if (secondsUntilAlarm >= 3600) {
-			// use HH:MM::SS format if one hour or more is left on timer
-			timeDisplay = ISOTimeUntilAlarm.substring(11, 19);
-		} else {
-			// if under 1 hour left use MM:SS format
-			timeDisplay = ISOTimeUntilAlarm.substring(14, 19);
+		if (secondsUntilAlarm != null) {
+			if (secondsUntilAlarm >= 3600) {
+				// use HH:MM::SS format if one hour or more is left on timer
+				timeDisplay = ISOTimeUntilAlarm.substring(11, 19);
+			} else {
+				// if under 1 hour left use MM:SS format
+				timeDisplay = ISOTimeUntilAlarm.substring(14, 19);
+			}
+			props.setTimeDisplay(timeDisplay);
 		}
-		props.setTimeDisplay(timeDisplay);
 		return timeDisplay;
 	}
 
@@ -104,15 +106,27 @@ export default function HomePage(props) {
 		});
 	}
 
+	function handleAlarmCancelRequest() {
+		let message = {
+			notificationData: data,
+			request: "cancelAlarm",
+		};
+		props.setTimeDisplay(null);
+		setIsAlarmRunning(false);
+		setSecondsUntilAlarm(null);
+		sendMessage(message);
+	}
+
+	function sendMessage(message) {
+		chrome.runtime.sendMessage(message, updateNotificationDataStateFromStorage);
+	}
+
 	let timeDisplay: string = timeDisplayLoadingMessage;
 	if (isAlarmRunning) {
 		if (secondsUntilAlarm != null) {
 			timeDisplay = getTimeDisplay();
 		}
 	} else if (isAlarmPaused) {
-		// timeDisplay = new Date(data.pauseStatus.timeRemaining * 1000)
-		// 	.toISOString()
-		// 	.substring(14, 19);
 		timeDisplay = getTimeDisplay();
 	} else {
 		timeDisplay = props.timeDisplay
@@ -127,39 +141,34 @@ export default function HomePage(props) {
 		toggleDisplay = "Pause";
 	}
 
-	function handleAlarmCancelRequest() {
-		let message = {
-			notificationData: data,
-			request: "cancelAlarm",
-		};
-		props.setTimeDisplay(null);
-		setIsAlarmRunning(false);
-		sendMessage(message);
-	}
-
-	function sendMessage(message) {
-		chrome.runtime.sendMessage(message, updateNotificationDataStateFromStorage);
-	}
-
 	const isAlarmSet =
 		isAlarmRunning ||
 		isAlarmPaused ||
 		(props.timeDisplay && timeDisplay != timeDisplayLoadingMessage);
 
+	let timerLabel: string = "";
+	if (isAlarmSet) {
+		timerLabel = isAlarmRunning ? "Time Until Alarm" : "Paused";
+	}
+
 	return (
 		<Container fluid className='homepageContainer'>
 			<Row>
 				<Col>
-					<div className='timerLabel'>
-						{isAlarmSet && <span>Time Until Alarm</span>}
-					</div>
+					<div className='timerLabel'>{timerLabel}</div>
 				</Col>
 			</Row>
 			<Row>
 				<Col />
 				<Col>
 					<div className='timerContainer'>
-						<div className={"timer " + (isAlarmSet && "timerActive")}>
+						<div
+							className={
+								"timer " +
+								(isAlarmSet && "timerSet ") +
+								(isAlarmPaused && "timerPaused")
+							}
+						>
 							{timeDisplay}
 						</div>
 					</div>

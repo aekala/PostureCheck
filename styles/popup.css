@@ -56,7 +56,7 @@ body {
 .timerContainer {
 	width: 22rem;
 	height: 22rem;
-	border: 5px solid #61dafb;
+	border: 1rem solid #61dafb;
 	border-radius: 50%;
 }
 
@@ -66,8 +66,12 @@ body {
 	line-height: 20rem;
 }
 
-.timer.timerActive {
+.timer.timerSet {
 	font-size: 5rem;
+}
+
+.timer.timerPaused {
+	color: gray;
 }
 
 .timerLabel {
