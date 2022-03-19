@@ -154,7 +154,7 @@ export default function Options() {
 						value={options.interval}
 						onChange={updateInterval}
 						min={1}
-						max={60}
+						max={160}
 						step='1'
 						autoComplete='off'
 						required

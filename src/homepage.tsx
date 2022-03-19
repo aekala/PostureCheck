@@ -22,9 +22,6 @@ export default function HomePage(props) {
 					timeUntilAlarm = Math.floor(
 						(alarm.scheduledTime - Date.now()) / 1000
 					);
-					if (timeUntilAlarm < 0) {
-						timeUntilAlarm = 0;
-					}
 				} else {
 					setIsAlarmRunning(false);
 				}

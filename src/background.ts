@@ -35,8 +35,7 @@ function eventListener(message, sender, sendResponse) {
 					alarmCreationSuccess = false;
 				}
 				chrome.alarms.create("PostureCheck", {
-					// periodInMinutes: notificationData.interval,
-					periodInMinutes: 0.15,
+					periodInMinutes: notificationData.interval,
 				});
 				chrome.alarms.onAlarm.addListener(alarmListener);
 				if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
@@ -73,9 +72,8 @@ function eventListener(message, sender, sendResponse) {
 			notificationData = message.notificationData;
 			let alarmResumeSuccess = true;
 			chrome.alarms.create("PostureCheck", {
-				periodInMinutes: 0.15,
+				periodInMinutes: notificationData.interval,
 				delayInMinutes: notificationData.pauseStatus.timeRemaining / 60.0,
-				// delayInMinutes: notificationData.pauseStatus.timeRemaining,
 			});
 			chrome.alarms.onAlarm.addListener(alarmListener);
 			if (!chrome.alarms.onAlarm.hasListener(alarmListener)) {
