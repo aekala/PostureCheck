@@ -7,8 +7,6 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
 	entry: {
 		popup: path.join(srcDir, "popup.tsx"),
-		options: path.join(srcDir, "options.tsx"),
-		homepage: path.join(srcDir, "homepage.tsx"),
 		background: path.join(srcDir, "background.ts"),
 	},
 	output: {
