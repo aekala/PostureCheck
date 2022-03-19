@@ -15,7 +15,7 @@ function initializeExtensionState() {
 		notificationData: initialNotificationData,
 		computerState: "active",
 	});
-	chrome.idle.setDetectionInterval(15);
+	chrome.idle.setDetectionInterval(300);
 }
 
 function eventListener(message, sender, sendResponse) {

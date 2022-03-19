@@ -24,7 +24,7 @@ Once you have adjusted your settings to your liking, click "Set Alarm" to start 
 
 View how much time is left before your alarm goes off back in the Home tab. Once your alarm is set you will have buttons there to pause and resume your alarm, as well as cancelling it altogether.
 
-PostureCheck won't give notifications if you are away from your computer, as it will skip sending a notification if you are idle for 5 minutes or more.
+PostureCheck also won't send a notification if you are away from your computer, as it will skip sending a notification if your alarm goes off while you have been idle for 5 or more minutes.
 
 ## Troubleshooting
 
