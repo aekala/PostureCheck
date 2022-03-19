@@ -33,7 +33,9 @@ export default function HomePage(props) {
 	useEffect(() => {
 		let timer = setInterval(() => {
 			getTimeUntilNextNotification().then((time) => {
-				setSecondsUntilAlarm(time);
+				if (time != null) {
+					setSecondsUntilAlarm(time);
+				}
 			});
 		}, 100);
 
@@ -108,9 +110,10 @@ export default function HomePage(props) {
 			timeDisplay = getTimeDisplay();
 		}
 	} else if (isAlarmPaused) {
-		timeDisplay = new Date(data.pauseStatus.timeRemaining * 1000)
-			.toISOString()
-			.substring(14, 19);
+		// timeDisplay = new Date(data.pauseStatus.timeRemaining * 1000)
+		// 	.toISOString()
+		// 	.substring(14, 19);
+		timeDisplay = getTimeDisplay();
 	} else {
 		timeDisplay = props.timeDisplay
 			? props.timeDisplay
