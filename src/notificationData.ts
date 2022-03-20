@@ -11,7 +11,7 @@ export class NotificationData {
 		title = "PostureCheck",
 		message = "How is your posture right now?",
 		type = "basic",
-		iconUrl = "../images/zen.jpg",
+		iconUrl = "../images/clock.png",
 		interval = 1,
 		silent = false,
 		pauseStatus = { isPaused: false, timeRemaining: 0 },

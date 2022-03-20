@@ -33,21 +33,10 @@ export default function HelpPage() {
 				</p>
 				<br />
 				<p>
-					If you are having issues, it may help to reset the extension via the
-					button below. It will clear the existing alarm and the local storage
-					within Chrome this extension utilizes.
+					If you are having issues, it may help to reload the extension at
+					chrome://extensions. Doing this will clear any existing alarm and the
+					local storage within Chrome this extension utilizes.
 				</p>
-			</Row>
-			<Row>
-				<Col>
-					<Button
-						variant='outline-primary'
-						onClick={handleExtensionResetRequest}
-						className='button'
-					>
-						Reset Extension
-					</Button>
-				</Col>
 			</Row>
 		</Container>
 	);
