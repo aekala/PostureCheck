@@ -36,14 +36,14 @@ export default function Options() {
 
 	function updateTitle(e) {
 		const title: string = e.target.value;
-		setOptions({ ...options, title: title });
+		setOptions({ ...options, title });
 	}
 
 	function updateMessage(e) {
 		const message: string = e.target.value;
 		setOptions({
 			...options,
-			message: message,
+			message,
 		});
 	}
 
@@ -51,7 +51,7 @@ export default function Options() {
 		const interval: number = parseInt(e.target.value);
 		setOptions({
 			...options,
-			interval: interval,
+			interval,
 		});
 	}
 

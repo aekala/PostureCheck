@@ -12,7 +12,7 @@ export class NotificationData {
 		message = "How is your posture right now?",
 		type = "basic",
 		iconUrl = "../images/clock.png",
-		interval = 1,
+		interval = 10,
 		silent = false,
 		pauseStatus = { isPaused: false, timeRemaining: 0 },
 	} = {}) {

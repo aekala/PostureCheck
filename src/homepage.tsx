@@ -71,7 +71,7 @@ export default function HomePage(props) {
 
 	function getTimeDisplay(): string {
 		const ISOTimeUntilAlarm = new Date(secondsUntilAlarm * 1000).toISOString();
-		let timeDisplay: string = "";
+		let timeDisplay: string = props.timeDisplay;
 
 		if (secondsUntilAlarm != null) {
 			if (secondsUntilAlarm >= 3600) {
@@ -107,7 +107,7 @@ export default function HomePage(props) {
 	}
 
 	function handleAlarmCancelRequest() {
-		let message = {
+		const message = {
 			notificationData: data,
 			request: "cancelAlarm",
 		};
@@ -134,12 +134,7 @@ export default function HomePage(props) {
 			: `No Alarm Currently Set`;
 	}
 
-	let toggleDisplay: string = "";
-	if (isAlarmPaused) {
-		toggleDisplay = "Resume";
-	} else {
-		toggleDisplay = "Pause";
-	}
+	const toggleDisplay = isAlarmPaused ? "Resume" : "Pause";
 
 	const isAlarmSet =
 		isAlarmRunning ||

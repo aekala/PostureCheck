@@ -10,7 +10,7 @@ Before you can load this extension into Google Chrome, you'll have to enable "De
 
 ![Enable Developer Mode](images/chrome_extension_devmode_diagram.png)
 
-Once you have Developer mode enabled, click "Load unpacked" on the "chrome://extensions/" page, locate the folder you previously unzipped the project to, and select the "dist" folder to upload. You should now see PostureCheck in your extensions toolbar (you may first need to click on your extensions toolbar and pin StarFree before you can see it there).
+Once you have Developer mode enabled, click "Load unpacked" on the "chrome://extensions/" page, locate the folder you unzipped the project to, and select the "dist" folder to upload. You should now see PostureCheck in your extensions toolbar (you may first need to click on your extensions toolbar and pin PostureCheck before you can see it there).
 
 # Using PostureCheck
 
@@ -28,7 +28,7 @@ View how much time is left before your alarm goes off back in the Home tab. Once
 
 ![Options Page](images/activealarm.png)
 
-PostureCheck won't send notifications if you are away from your computer, as it will choose to skip sending a notification if your alarm goes off while you have been idle for 5 or more minutes.
+PostureCheck won't send notifications if you are away from your computer, as it will choose to skip sending a notification if your alarm goes off while you have been idle for 5 or more minutes. It also may or may not show notifications when you are in full-screen mode depending on your system preferences.
 
 Once your alarm goes off, a notification with your options will appear. The alarm will then start counting down again. The appearence of the notification may vary depending on your computer's operating system, this screenshot was taken while running on Windows 10.
 

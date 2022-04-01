@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Container, Nav } from "react-bootstrap";
 import HomePage from "./homepage";
@@ -8,6 +8,21 @@ import HelpPage from "./helppage";
 function Popup() {
 	const [key, setKey] = useState("home");
 	const [timeDisplay, setTimeDisplay] = useState(null);
+	const isInitialMount = useRef(true);
+
+	function updateTimeDisplay(time) {
+		chrome.storage.local.set({ timeDisplay: time });
+		setTimeDisplay(time);
+	}
+
+	useEffect(() => {
+		if (isInitialMount.current) {
+			chrome.storage.local.get("timeDisplay", (res) => {
+				setTimeDisplay(res.timeDisplay);
+			});
+			isInitialMount.current = false;
+		}
+	});
 
 	const content = () => {
 		switch (key) {
@@ -15,7 +30,7 @@ function Popup() {
 				return (
 					<HomePage
 						timeDisplay={timeDisplay}
-						setTimeDisplay={setTimeDisplay}
+						setTimeDisplay={updateTimeDisplay}
 						changeViewToOptionsPage={() => setKey("options")}
 					/>
 				);
