@@ -4,7 +4,7 @@ PostureCheck is a Google Chrome extension designed to send notifications at a sp
 
 # Setup
 
-In order to use this Google Chrome extension, you'll need to download the project onto your computer. You can do this by downloading the .zip file and then extracting it to a folder.
+In order to use this Google Chrome extension, you'll need to download the project onto your computer. You can do this by downloading clicking the green "Code" button above, and selecting "Download ZIP". Once the .zip file has finished downloading, right click it on your desktop or file explorer and unpack it to a folder.
 
 Before you can load this extension into Google Chrome, you'll have to enable "Developer mode" by typing in "chrome://extensions/" into the search bar and enabling the setting there.
 
