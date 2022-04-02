@@ -16,23 +16,23 @@ Once you have Developer mode enabled, click "Load unpacked" on the "chrome://ext
 
 Once you have installed PostureCheck, you can create your alarm by clicking the icon in your extensions toolbar.
 
-![Home Page](images/homepage.png)
+![Home Page](images/homePage.png)
 
 To create your alarm, you can start by navigating to the Options tab, or by clicking the "Create Alarm" button on the Home tab which will also take you to the Options tab. Within the Options tab
 you can you can edit the title and message for your notifications, adjust how often you want your alarm to go off, and can choose to have silent notifications that will not make any noise when they appear. So really you can create a notification for anything you want, not just posture.
 Once you have adjusted your settings to your liking, click "Set Alarm" to start your alarm. One note is that I have the maximum time interval you can set capped at three hours.
 
-![Options Page](images/options.png)
+![Options Page](images/optionsPage.png)
 
 View how much time is left before your alarm goes off back in the Home tab. Once your alarm is set you will have buttons there to pause and resume your alarm, as well as cancelling it altogether.
 
-![Options Page](images/activealarm.png)
+![Options Page](images/activeAlarm.png)
 
 PostureCheck won't send notifications if you are away from your computer, as it will choose to skip sending a notification if your alarm goes off while you have been idle for 5 or more minutes. It also may or may not show notifications when you are in full-screen mode depending on your system preferences.
 
 Once your alarm goes off, a notification with your options will appear. The alarm will then start counting down again. The appearence of the notification may vary depending on your computer's operating system, this screenshot was taken while running on Windows 10.
 
-![Notification](images/notification.png)
+![Notification](images/notificationImg.png)
 
 # Troubleshooting
 
